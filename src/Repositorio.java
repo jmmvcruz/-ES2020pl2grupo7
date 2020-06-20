@@ -17,16 +17,16 @@ public class Repositorio {
 
 
     public Repositorio() {
-        Laramazemlivros = new ArrayList<ArmazemLivros>();
-        Lbiblioteca = new ArrayList<Biblioteca>();
-        Lencomenda = new ArrayList<Encomenda>();
-        Lfeedback = new ArrayList<Feedback>();
-        Llivro = new ArrayList<Livro>();
-        Llivroencomenda = new ArrayList<LivrosEncomenda>();
-        Lresponsavelempresa = new ArrayList<Responsavel_empresa>();
-        Lresponsavelbiblioteca = new ArrayList<Responsavel_biblioteca>();
-        Ltransportadora = new ArrayList<Transportadora>();
-        Lvoucher = new ArrayList<Voucher>();
+        Laramazemlivros = new ArrayList<>();
+        Lbiblioteca = new ArrayList<>();
+        Lencomenda = new ArrayList<>();
+        Lfeedback = new ArrayList<>();
+        Llivro = new ArrayList<>();
+        Llivroencomenda = new ArrayList<>();
+        Lresponsavelempresa = new ArrayList<>();
+        Lresponsavelbiblioteca = new ArrayList<>();
+        Ltransportadora = new ArrayList<>();
+        Lvoucher = new ArrayList<>();
     }
 
     public void adicionaLivro(Livro livro) {
@@ -57,7 +57,7 @@ public class Repositorio {
 
 
     public Livro devolvelivro(Integer l){
-        Livro e = null;
+        Livro e ;
         int i;
         for(i=0;i<Llivro.size();i++){
             e=Llivro.get(i);
@@ -70,7 +70,7 @@ public class Repositorio {
     }
 
     public ArmazemLivros devolvearmazem(Integer l){
-        ArmazemLivros e = null;
+        ArmazemLivros e;
         int i;
         for(i=0;i<Laramazemlivros.size();i++){
             e=Laramazemlivros.get(i);
@@ -83,7 +83,7 @@ public class Repositorio {
     }
 
     public Encomenda devolveencomenda(Integer l){
-        Encomenda e = null;
+        Encomenda e ;
         int i;
         for(i=0;i<Lencomenda.size();i++){
             e=Lencomenda.get(i);
@@ -96,7 +96,7 @@ public class Repositorio {
     }
 
     public Biblioteca devolvebiblioteca(Integer l){
-        Biblioteca e = null;
+        Biblioteca e ;
         int i;
         for(i=0;i<Lbiblioteca.size();i++){
             e=Lbiblioteca.get(i);
@@ -109,7 +109,7 @@ public class Repositorio {
     }
 
     public Feedback devolvefeedback(Integer l){
-        Feedback e = null;
+        Feedback e;
         int i;
         for(i=0;i<Lfeedback.size();i++){
             e=Lfeedback.get(i);
@@ -122,7 +122,7 @@ public class Repositorio {
     }
 
     public Responsavel_biblioteca devolveresponsavelbiblioteca(Integer l){
-        Responsavel_biblioteca e = null;
+        Responsavel_biblioteca e ;
         int i;
         for(i=0;i<Lresponsavelbiblioteca.size();i++){
             e=Lresponsavelbiblioteca.get(i);
@@ -135,7 +135,7 @@ public class Repositorio {
     }
 
     public Responsavel_empresa devolveresponsavelempresa(Integer l){
-        Responsavel_empresa e = null;
+        Responsavel_empresa e ;
         int i;
         for(i=0;i<Lresponsavelempresa.size();i++){
             e=Lresponsavelempresa.get(i);
@@ -148,7 +148,7 @@ public class Repositorio {
     }
 
     public LivrosEncomenda devolvelivrosencomenda(Integer l){
-        LivrosEncomenda e = null;
+        LivrosEncomenda e ;
         int i;
         for(i=0;i<Llivroencomenda.size();i++){
             e=Llivroencomenda.get(i);
@@ -161,7 +161,7 @@ public class Repositorio {
     }
 
     public Transportadora devolvetransportadora(Integer l){
-        Transportadora e = null;
+        Transportadora e ;
         int i;
         for(i=0;i<Ltransportadora.size();i++){
             e=Ltransportadora.get(i);
@@ -174,7 +174,7 @@ public class Repositorio {
     }
 
     public Voucher devolvevoucher(Integer l){
-        Voucher e = null;
+        Voucher e ;
         int i;
         for(i=0;i<Lvoucher.size();i++){
             e=Lvoucher.get(i);
@@ -186,29 +186,45 @@ public class Repositorio {
         return null;
     }
 
-    public void criar_encomenda(HashMap<Livro,Integer>livrosencomendados ,Biblioteca b,Voucher v){
+    public int criar_encomenda(HashMap<Livro,Integer>livrosencomendados ,Biblioteca b,Voucher v){
 
         //Integer nlivros, Biblioteca biblioteca, Voucher voucher, Integer preço
         Livro l;
+        int i;
         Integer nlivros=0;
         Map<Livro,Integer>maplivros= livrosencomendados;
         Integer preco=0;
         for (Map.Entry<Livro, Integer> entry : maplivros.entrySet()) {
-            System.out.println(entry.getKey() + " = " + entry.getValue());
+
             nlivros=nlivros+entry.getValue();
             l=entry.getKey();
             preco=preco+l.getPreco();
+           for(i=0;i<Laramazemlivros.size();i++){
+                ArmazemLivros la=Laramazemlivros.get(i);
+                if ((la.getLivro()).equals(l) ) {
+
+                    if((la.getQuantidade())<entry.getValue()){
+                        System.out.println("nao existem livros suficientes");
+                        return 0;
+                        }
+                    System.out.println(entry.getKey() + " = " + entry.getValue());
+
+                }
+            }
         }
         Encomenda e = new Encomenda(nlivros,b,v,preco);
         Lencomenda.add(e);
         //Livro livro, Encomenda encomenda
         for (Map.Entry<Livro, Integer> entry : maplivros.entrySet()) {
-            System.out.println(entry.getKey() + " = " + entry.getValue());
-            nlivros=nlivros+entry.getValue();
+            System.out.println("le: "+entry.getKey() + " = " + entry.getValue());
+            nlivros=entry.getValue();
             l=entry.getKey();
+            System.out.println("le: "+l + " = " + nlivros);
             LivrosEncomenda le = new LivrosEncomenda(l,e,nlivros);
             Llivroencomenda.add(le);
         }
+        System.out.println("entrega criada");
+        return 0;
 
 
 
@@ -216,9 +232,9 @@ public class Repositorio {
 
 
     public Encomenda validar_encomenda(Integer l,Biblioteca b){
-        Encomenda e = null;
-        LivrosEncomenda le = null;
-        int i;
+        Encomenda e ;
+        LivrosEncomenda le ;
+        int i,j;
         for(i=0;i<Lencomenda.size();i++){
             e=Lencomenda.get(i);
             if (l.equals(e.getId()) ) {
@@ -229,13 +245,20 @@ public class Repositorio {
                 for(i=0;i<Llivroencomenda.size();i++){
                     le=Llivroencomenda.get(i);
                     if ((le.getEncomenda()).equals(e) ) {
+                        for(j=0;j<Laramazemlivros.size();j++){
+                            ArmazemLivros la=Laramazemlivros.get(j);
+                            if ((la.getLivro()).equals(le.getLivro()) ) {
 
+                                la.setQuantidade(la.getQuantidade()-le.getNlivros());
+                            }
+                        }
                         le.setEstado("validada");
 
 
 
                     }
                 }
+                System.out.println("entrega validada");
                 return e;
             }
         }
@@ -244,8 +267,8 @@ public class Repositorio {
     }
 
     public Encomenda enviar_encomenda(Integer l,Biblioteca b){
-        Encomenda e = null;
-        LivrosEncomenda le = null;
+        Encomenda e ;
+        LivrosEncomenda le ;
         int i;
         for(i=0;i<Lencomenda.size();i++){
             e=Lencomenda.get(i);
@@ -264,6 +287,7 @@ public class Repositorio {
 
                     }
                 }
+                System.out.println("entrega enviada");
                 return e;
             }
         }
@@ -272,8 +296,8 @@ public class Repositorio {
     }
 
     public Encomenda confirmar_encomenda(Integer l,Biblioteca b){
-        Encomenda e = null;
-        LivrosEncomenda le = null;
+        Encomenda e ;
+        LivrosEncomenda le ;
         int i;
         for(i=0;i<Lencomenda.size();i++){
             e=Lencomenda.get(i);
@@ -292,6 +316,7 @@ public class Repositorio {
 
                     }
                 }
+                System.out.println("entrega confirmada");
                 return e;
             }
         }
@@ -306,12 +331,30 @@ public class Repositorio {
         return f;
     }
 
-    public void Registar_biblioteca(String nome_biblioteca,String nome_responsavel,String morada,Integer idade,Integer nif,String email){
+    public int Registar_biblioteca(String nome_biblioteca,String nome_responsavel,String morada,Integer idade,Integer nif,String email){
+       int i;
+       Biblioteca bv;
+       Responsavel_biblioteca rv;
         Responsavel_biblioteca r = new Responsavel_biblioteca(nome_responsavel,idade,nif,email);
         Biblioteca b = new Biblioteca(nome_biblioteca,morada,r);
+        for(i=0;i<Lbiblioteca.size();i++){
+            bv=Lbiblioteca.get(i);
+            if (bv.getNome().equals(b.getNome()) ) {
+                System.out.println("biblioteca ja existe");
+                return 0;
+            }
+
+        }
+        for(i=0;i<Lresponsavelbiblioteca.size();i++){
+            rv=Lresponsavelbiblioteca.get(i);
+            if (rv.getEmail().equals(r.getEmail()) ) {
+                System.out.println("email ja utilizado");
+                return 0;
+            }
+        }
         Lbiblioteca.add(b);
         Lresponsavelbiblioteca.add(r);
-
+        return 0;
 
     }
 
