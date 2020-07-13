@@ -6,7 +6,7 @@ public class Encomenda {
     Integer nlivros;
     Integer NlivrosEntreges;
     LocalDate dataEntrege;
-    Transportadora transportadora;
+
     Biblioteca biblioteca;
     Voucher voucher;
     Integer preco;
@@ -66,13 +66,8 @@ public class Encomenda {
         this.dataEntrege = dataEntrege;
     }
 
-    public Transportadora getTransportadora() {
-        return transportadora;
-    }
 
-    public void setTransportadora(Transportadora transportadora) {
-        this.transportadora = transportadora;
-    }
+
 
     public Biblioteca getBiblioteca() {
         return biblioteca;

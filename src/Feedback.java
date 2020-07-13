@@ -1,13 +1,13 @@
 public class Feedback {
     Integer valor;
     String comentario;
-    Transportadora transportadora;
+   Entrega entrega;
     Responsavel_biblioteca responsavel_biblioteca;
     Integer id;
-    public Feedback(Integer valor, String comentario, Transportadora transportadora, Responsavel_biblioteca responsavel_biblioteca) {
+    public Feedback(Integer valor, String comentario, Entrega entrega, Responsavel_biblioteca responsavel_biblioteca) {
         this.valor = valor;
         this.comentario = comentario;
-        this.transportadora = transportadora;
+        this.entrega = entrega;
         this.responsavel_biblioteca = responsavel_biblioteca;
         this.id =  getNextId();
     }
@@ -31,12 +31,12 @@ public class Feedback {
         this.comentario = comentario;
     }
 
-    public Transportadora getTransportadora() {
-        return transportadora;
+    public Entrega getEntrega() {
+        return entrega;
     }
 
-    public void setTransportadora(Transportadora transportadora) {
-        this.transportadora = transportadora;
+    public void setEntrega(Entrega entrega) {
+        this.entrega = entrega;
     }
 
     public Responsavel_biblioteca getResponsavel_biblioteca() {

@@ -1,17 +1,15 @@
-public class LivrosEncomenda {
+public class LivrosEntrega {
     String estado;
     Livro livro;
-    Encomenda encomenda;
+    Entrega entrega;
     Integer id;
     Integer nlivros;
-    Integer nlivrosentregues;
-    public LivrosEncomenda( Livro livro, Encomenda encomenda,Integer nlivros ) {
+    public LivrosEntrega( Livro livro, Entrega entrega,Integer nlivros) {
         this.estado = "por enviar";
         this.livro = livro;
-        this.encomenda = encomenda;
+        this.entrega = entrega;
         this.id =  getNextId();
         this.nlivros =nlivros;
-        this.nlivrosentregues=0;
     }
 
     public Integer getId() {
@@ -33,12 +31,12 @@ public class LivrosEncomenda {
         this.livro = livro;
     }
 
-    public Encomenda getEncomenda() {
-        return encomenda;
+    public Entrega getEntrega() {
+        return entrega;
     }
 
-    public void setEncomenda(Encomenda encomenda) {
-        this.encomenda = encomenda;
+    public void setEntrega(Entrega entrega) {
+        this.entrega = entrega;
     }
 
     public Integer getNlivros() {
@@ -47,14 +45,6 @@ public class LivrosEncomenda {
 
     public void setNlivros(Integer nlivros) {
         this.nlivros = nlivros;
-    }
-
-    public Integer getNlivrosentregues() {
-        return nlivrosentregues;
-    }
-
-    public void setNlivrosentregues(Integer nlivrosentregues) {
-        this.nlivrosentregues = nlivrosentregues;
     }
 
     protected static int index = 0;

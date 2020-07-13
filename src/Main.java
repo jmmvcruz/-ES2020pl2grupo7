@@ -10,6 +10,7 @@ public class Main {
             Livro l = new Livro("tituloteste",123,"autorteste", LocalDate.now(),12);
             Livro l2 = new Livro("tituloteste2",1234,"autorteste2", LocalDate.now(),123);
             Repositorio r = new Repositorio();
+            Responsavel_empresa re = new Responsavel_empresa("joao","rua mouga",50,123123123);
             r.adicionaLivro(l);
             r.adicionaLivro(l2);
             Livro l3= r.devolvelivro(2);
@@ -29,7 +30,7 @@ public class Main {
 
             LivrosEncomenda lv = r.devolvelivrosencomenda(1);
             System.out.println(lv.getEstado());
-            r.validar_encomenda(1,b);
+            r.validar_encomenda(1,b,re);
             lv = r.devolvelivrosencomenda(1);
             System.out.println(lv.getEstado());
             ArmazemLivros la = r.devolvearmazem(1);

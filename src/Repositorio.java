@@ -14,7 +14,8 @@ public class Repositorio {
     ArrayList<Responsavel_biblioteca> Lresponsavelbiblioteca ;
     ArrayList<Transportadora> Ltransportadora ;
     ArrayList<Voucher> Lvoucher ;
-
+    ArrayList<Entrega> Lentrega ;
+    ArrayList<LivrosEntrega> Llivrosentrega ;
 
     public Repositorio() {
         Laramazemlivros = new ArrayList<>();
@@ -27,6 +28,8 @@ public class Repositorio {
         Lresponsavelbiblioteca = new ArrayList<>();
         Ltransportadora = new ArrayList<>();
         Lvoucher = new ArrayList<>();
+        Lentrega = new ArrayList<>();
+        Llivrosentrega = new ArrayList<>();
     }
 
     public void adicionaLivro(Livro livro) {
@@ -54,6 +57,12 @@ public class Repositorio {
     public void adicionaVoucher(Voucher voucher) {
         Lvoucher.add(voucher);
     }
+    public void adicionaEntrega(Entrega entrega) {
+        Lentrega.add(entrega);
+    }
+    public void adicionaLivrosEntrega(LivrosEntrega livrosentrega) {
+        Llivrosentrega.add(livrosentrega);
+    }
 
 
     public Livro devolvelivro(Integer l){
@@ -61,6 +70,32 @@ public class Repositorio {
         int i;
         for(i=0;i<Llivro.size();i++){
             e=Llivro.get(i);
+            if (l.equals(e.getId()) )
+                return e;
+
+        }
+
+        return null;
+    }
+
+    public Entrega devolveEntrega(Integer l){
+        Entrega e ;
+        int i;
+        for(i=0;i<Lentrega.size();i++){
+            e=Lentrega.get(i);
+            if (l.equals(e.getId()) )
+                return e;
+
+        }
+
+        return null;
+    }
+
+    public LivrosEntrega devolvelivroentrega(Integer l){
+        LivrosEntrega e ;
+        int i;
+        for(i=0;i<Llivrosentrega.size();i++){
+            e=Llivrosentrega.get(i);
             if (l.equals(e.getId()) )
                 return e;
 
@@ -231,14 +266,14 @@ public class Repositorio {
     }
 
 
-    public Encomenda validar_encomenda(Integer l,Biblioteca b){
+    public Encomenda validar_encomenda(Integer l,Biblioteca b,Responsavel_empresa r){
         Encomenda e ;
         LivrosEncomenda le ;
         int i,j;
         for(i=0;i<Lencomenda.size();i++){
             e=Lencomenda.get(i);
             if (l.equals(e.getId()) ) {
-                Notificacoes n = new Notificacoes("a sua encomenda foi validada",b.getResponsavel_biblioteca());
+                Notificacoes n = new Notificacoes("a sua encomenda foi validada",b.getResponsavel_biblioteca(),r);
                 e.setEstado("validada");
 
                 e.setDataenvio(LocalDate.now());
@@ -266,14 +301,68 @@ public class Repositorio {
         return null;
     }
 
-    public Encomenda enviar_encomenda(Integer l,Biblioteca b){
+    public Encomenda enviar_parcialmente_encomenda(Integer it,Transportadora t,Biblioteca b,Responsavel_empresa r,HashMap<Livro,Integer>livros){
+        Encomenda e ;
+        LivrosEncomenda le ;
+        int nlivros;
+        Livro l;
+        int i;
+        for(i=0;i<Lencomenda.size();i++){
+            e=Lencomenda.get(i);
+            if (it.equals(e.getId()) ) {
+                Notificacoes n = new Notificacoes("parte da sua encomenda foi enviada",b.getResponsavel_biblioteca(),r);
+                e.setEstado("envioparcial");
+                Entrega et= new Entrega(e,t);
+                Lentrega.add(et);
+
+                for (Map.Entry<Livro, Integer> entry : livros.entrySet()) {
+                    System.out.println("le: "+entry.getKey() + " = " + entry.getValue());
+                    nlivros=entry.getValue();
+                    l=entry.getKey();
+                    System.out.println("let: "+l + " = " + nlivros);
+                    LivrosEntrega let = new LivrosEntrega(l,et,nlivros);
+                    Llivrosentrega.add(let);
+                }
+                for(i=0;i<Llivroencomenda.size();i++){
+                    le=Llivroencomenda.get(i);
+                    if ((le.getEncomenda()).equals(e) ) {
+
+
+                        for (Map.Entry<Livro, Integer> entry : livros.entrySet()) {
+                            System.out.println("le: "+entry.getKey() + " = " + entry.getValue());
+                            nlivros=entry.getValue();
+                            l=entry.getKey();
+                            if ((le.getLivro()).equals(l) ) {
+                                int j = le.getNlivrosentregues()+nlivros;
+                                le.setNlivrosentregues(j);
+                                if ((le.getNlivros()).equals(le.getNlivrosentregues()))
+                                {
+                                    le.setEstado("enviado");
+                                }
+                            }
+
+                        }
+
+
+
+
+                    }
+                }
+                System.out.println("entrega enviada");
+                return e;
+            }
+        }
+
+        return null;
+    }
+    public Encomenda enviar_encomenda(Integer l,Biblioteca b,Responsavel_empresa r){
         Encomenda e ;
         LivrosEncomenda le ;
         int i;
         for(i=0;i<Lencomenda.size();i++){
             e=Lencomenda.get(i);
             if (l.equals(e.getId()) ) {
-                Notificacoes n = new Notificacoes("a sua encomenda foi enviada",b.getResponsavel_biblioteca());
+                Notificacoes n = new Notificacoes("a sua encomenda foi enviada",b.getResponsavel_biblioteca(),r);
                 e.setEstado("enviado");
 
                 e.setDataenvio(LocalDate.now());
@@ -287,6 +376,7 @@ public class Repositorio {
 
                     }
                 }
+                e.setDataEntrege(LocalDate.now());
                 System.out.println("entrega enviada");
                 return e;
             }
@@ -295,17 +385,47 @@ public class Repositorio {
         return null;
     }
 
-    public Encomenda confirmar_encomenda(Integer l,Biblioteca b){
+    public Entrega confirmar_Entrega(Integer l,Biblioteca b,Responsavel_empresa r){
+        Entrega e ;
+        LivrosEntrega le ;
+        int i;
+        for(i=0;i<Lentrega.size();i++){
+            e=Lentrega.get(i);
+            if (l.equals(e.getId()) ) {
+                Notificacoes n = new Notificacoes("a encomenda foi entrege",b.getResponsavel_biblioteca(),r);
+                e.setEstado("entrege");
+
+                e.setDataEntrege(LocalDate.now());
+                for(i=0;i<Llivrosentrega.size();i++){
+                    le=Llivrosentrega.get(i);
+                    if ((le.getEntrega()).equals(e) ) {
+
+                        le.setEstado("entrege");
+
+
+
+                    }
+                }
+                e.setDataEntrege(LocalDate.now());
+                System.out.println("entrega confirmada");
+                return e;
+            }
+        }
+
+        return null;
+    }
+
+    public Encomenda confirmar_encomenda(Integer l,Biblioteca b,Responsavel_empresa r){
         Encomenda e ;
         LivrosEncomenda le ;
         int i;
         for(i=0;i<Lencomenda.size();i++){
             e=Lencomenda.get(i);
             if (l.equals(e.getId()) ) {
-                Notificacoes n = new Notificacoes("a encomenda foi entrege",b.getResponsavel_biblioteca());
+                Notificacoes n = new Notificacoes("a encomenda foi entrege",b.getResponsavel_biblioteca(),r);
                 e.setEstado("entrege");
 
-                e.setDataenvio(LocalDate.now());
+                e.setDataEntrege(LocalDate.now());
                 for(i=0;i<Llivroencomenda.size();i++){
                     le=Llivroencomenda.get(i);
                     if ((le.getEncomenda()).equals(e) ) {
@@ -316,7 +436,7 @@ public class Repositorio {
 
                     }
                 }
-                System.out.println("entrega confirmada");
+                System.out.println("entrega da encomenda confirmada");
                 return e;
             }
         }
@@ -324,9 +444,9 @@ public class Repositorio {
         return null;
     }
 
-    public Feedback efecutar_feedback(Biblioteca b , String m , Transportadora t,Integer v)
+    public Feedback efecutar_feedback(Biblioteca b , String m , Entrega e,Integer v)
     {
-        Feedback f = new Feedback(v,m,t,b.getResponsavel_biblioteca());
+        Feedback f = new Feedback(v,m,e,b.getResponsavel_biblioteca());
         Lfeedback.add(f);
         return f;
     }
