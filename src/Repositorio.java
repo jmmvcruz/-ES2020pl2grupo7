@@ -15,6 +15,7 @@ public class Repositorio {
     ArrayList<Transportadora> Ltransportadora ;
     ArrayList<Voucher> Lvoucher ;
     ArrayList<Entrega> Lentrega ;
+    ArrayList<Notificacoes> Lnotificacoes ;
     ArrayList<LivrosEntrega> Llivrosentrega ;
 
     public Repositorio() {
@@ -29,6 +30,7 @@ public class Repositorio {
         Ltransportadora = new ArrayList<>();
         Lvoucher = new ArrayList<>();
         Lentrega = new ArrayList<>();
+        Lnotificacoes = new ArrayList<>();
         Llivrosentrega = new ArrayList<>();
     }
 
@@ -64,12 +66,28 @@ public class Repositorio {
         Llivrosentrega.add(livrosentrega);
     }
 
+    public void adicionaNotificacao(Notificacoes notificacoes) {
+        Lnotificacoes.add(notificacoes);
+    }
 
     public Livro devolvelivro(Integer l){
         Livro e ;
         int i;
         for(i=0;i<Llivro.size();i++){
             e=Llivro.get(i);
+            if (l.equals(e.getId()) )
+                return e;
+
+        }
+
+        return null;
+    }
+
+    public Notificacoes devolvenotificacoes(Integer l){
+        Notificacoes e ;
+        int i;
+        for(i=0;i<Lnotificacoes.size();i++){
+            e=Lnotificacoes.get(i);
             if (l.equals(e.getId()) )
                 return e;
 
@@ -275,7 +293,7 @@ public class Repositorio {
             if (l.equals(e.getId()) ) {
                 Notificacoes n = new Notificacoes("a sua encomenda foi validada",b.getResponsavel_biblioteca(),r);
                 e.setEstado("validada");
-
+                Lnotificacoes.add(n);
                 e.setDataenvio(LocalDate.now());
                 for(i=0;i<Llivroencomenda.size();i++){
                     le=Llivroencomenda.get(i);
@@ -311,6 +329,7 @@ public class Repositorio {
             e=Lencomenda.get(i);
             if (it.equals(e.getId()) ) {
                 Notificacoes n = new Notificacoes("parte da sua encomenda foi enviada",b.getResponsavel_biblioteca(),r);
+                Lnotificacoes.add(n);
                 e.setEstado("envioparcial");
                 Entrega et= new Entrega(e,t);
                 Lentrega.add(et);
@@ -364,7 +383,7 @@ public class Repositorio {
             if (l.equals(e.getId()) ) {
                 Notificacoes n = new Notificacoes("a sua encomenda foi enviada",b.getResponsavel_biblioteca(),r);
                 e.setEstado("enviado");
-
+                Lnotificacoes.add(n);
                 Entrega et= new Entrega(e,t);
                 Lentrega.add(et);
                 e.setDataenvio(LocalDate.now());
@@ -397,7 +416,7 @@ public class Repositorio {
             if (l.equals(e.getId()) ) {
                 Notificacoes n = new Notificacoes("a encomenda foi entrege",b.getResponsavel_biblioteca(),r);
                 e.setEstado("entrege");
-
+                Lnotificacoes.add(n);
                 e.setDataEntrege(LocalDate.now());
                 for(i=0;i<Llivrosentrega.size();i++){
                     le=Llivrosentrega.get(i);
@@ -427,7 +446,7 @@ public class Repositorio {
             if (l.equals(e.getId()) ) {
                 Notificacoes n = new Notificacoes("a encomenda foi entrege",b.getResponsavel_biblioteca(),r);
                 e.setEstado("entrege");
-
+                Lnotificacoes.add(n);
                 e.setDataEntrege(LocalDate.now());
                 for(i=0;i<Llivroencomenda.size();i++){
                     le=Llivroencomenda.get(i);
