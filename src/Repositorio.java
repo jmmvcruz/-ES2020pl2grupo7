@@ -390,12 +390,9 @@ public class Repositorio {
                 for(i=0;i<Llivroencomenda.size();i++){
                     le=Llivroencomenda.get(i);
                     if ((le.getEncomenda()).equals(e) ) {
-
                         le.setEstado("enviado");
                         LivrosEntrega let = new LivrosEntrega(le.getLivro(),et,le.getNlivros());
                         Llivrosentrega.add(let);
-
-
                     }
                 }
                 e.setDataEntrege(LocalDate.now());
@@ -403,7 +400,6 @@ public class Repositorio {
                 return e;
             }
         }
-
         return null;
     }
 
