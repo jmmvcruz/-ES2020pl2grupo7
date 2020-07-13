@@ -355,7 +355,7 @@ public class Repositorio {
 
         return null;
     }
-    public Encomenda enviar_encomenda(Integer l,Biblioteca b,Responsavel_empresa r){
+    public Encomenda enviar_encomenda(Integer l,Biblioteca b,Responsavel_empresa r,Transportadora t){
         Encomenda e ;
         LivrosEncomenda le ;
         int i;
@@ -365,13 +365,16 @@ public class Repositorio {
                 Notificacoes n = new Notificacoes("a sua encomenda foi enviada",b.getResponsavel_biblioteca(),r);
                 e.setEstado("enviado");
 
+                Entrega et= new Entrega(e,t);
+                Lentrega.add(et);
                 e.setDataenvio(LocalDate.now());
                 for(i=0;i<Llivroencomenda.size();i++){
                     le=Llivroencomenda.get(i);
                     if ((le.getEncomenda()).equals(e) ) {
 
                         le.setEstado("enviado");
-
+                        LivrosEntrega let = new LivrosEntrega(le.getLivro(),et,le.getNlivros());
+                        Llivrosentrega.add(let);
 
 
                     }
